@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Apodos skapare</title>
+<style>
+:root {
+--bg: #f5f7fb;
+--card-bg: #ffffff;
+--accent: #2563eb;
+--accent-soft: #e0ecff;
+--border-soft: #d4d7e2;
+--text-main: #1f2933;
+--text-muted: #6b7280;
+--danger: #dc2626;
+}
+
+* {
+box-sizing: border-box;
+}
+
+body {
+margin: 0;
+padding: 20px;
+font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+background: var(--bg);
+color: var(--text-main);
+}
+
+.app {
+max-width: 1100px;
+margin: 0 auto;
+}
+
+.app-header {
+margin-bottom: 20px;
+}
+
+.app-title {
+font-size: 26px;
+font-weight: 600;
+margin: 0;
+color: var(--accent);
+}
+
+.app-subtitle {
+margin: 4px 0 0;
+font-size: 13px;
+color: var(--text-muted);
+}
+
+.layout {
+display: grid;
+grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+gap: 18px;
+}
+
+.card {
+background: var(--card-bg);
+border-radius: 10px;
+padding: 16px 18px 18px;
+box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.card-header {
+display: flex;
+justify-content: space-between;
+align-items: baseline;
+margin-bottom: 10px;
+}
+
+.card-title {
+font-size: 16px;
+font-weight: 600;
+margin: 0;
+}
+
+.card-caption {
+font-size: 12px;
+color: var(--text-muted);
+}
+
+form {
+margin: 0;
+}
+
+.field-group {
+margin-bottom: 12px;
+}
+
+.field-label {
+display: block;
+font-size: 12px;
+font-weight: 500;
+margin-bottom: 4px;
+}
+
+.field-helper {
+font-size: 11px;
+color: var(--text-muted);
+margin-top: 2px;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+width: 100%;
+max-width: 280px;
+padding: 6px 8px;
+border-radius: 6px;
+border: 1px solid var(--border-soft);
+font-size: 13px;
+color: var(--text-main);
+background: #ffffff;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+outline: none;
+border-color: var(--accent);
+box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+}
+
+.inline-row {
+display: flex;
+gap: 10px;
+align-items: center;
+}
+
+.section-title {
+font-size: 13px;
+font-weight: 600;
+margin: 12px 0 6px;
+}
+
+.section-caption {
+font-size: 11px;
+color: var(--text-muted);
+margin-bottom: 6px;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 4px;
+border-radius: 8px;
+overflow: hidden;
+border: 1px solid var(--border-soft);
+}
+
+thead {
+background: var(--accent-soft);
+}
+
+th, td {
+border-bottom: 1px solid var(--border-soft);
+padding: 4px 6px;
+text-align: center;
+font-size: 12px;
+}
+
+th.med-col,
+td.med-col {
+text-align: left;
+min-width: 220px;
+}
+
+tbody tr:nth-child(even) {
+background: #f9fafb;
+}
+
+.row-actions-cell {
+white-space: nowrap;
+}
+
+.row-btn {
+padding: 2px 6px;
+font-size: 11px;
+border-radius: 4px;
+border: 1px solid var(--border-soft);
+background: #ffffff;
+cursor: pointer;
+}
+
+.row-btn:hover {
+background: #eef2ff;
+border-color: var(--accent);
+}
+
+.row-minus {
+color: var(--danger);
+}
+
+.dose-input {
+width: 42px;
+text-align: center;
+font-size: 11px;
+padding: 3px 4px;
+border-radius: 4px;
+border: 1px solid var(--border-soft);
+}
+
+.dose-input:focus {
+outline: none;
+border-color: var(--accent);
+}
+
+.time-header-input {
+width: 42px;
+text-align: center;
+font-size: 11px;
+padding: 3px 4px;
+border-radius: 4px;
+border: 1px solid var(--border-soft);
+}
+
+.time-control-cell button {
+padding: 2px 6px;
+font-size: 11px;
+margin-left: 2px;
+border-radius: 4px;
+border: 1px solid var(--border-soft);
+background: #ffffff;
+cursor: pointer;
+}
+
+.time-control-cell button:hover {
+background: #eef2ff;
+border-color: var(--accent);
+}
+
+.button-row {
+margin-top: 14px;
+display: flex;
+gap: 10px;
+}
+
+.btn {
+padding: 7px 12px;
+font-size: 13px;
+border-radius: 999px;
+border: 1px solid transparent;
+cursor: pointer;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+}
+
+.btn-primary {
+background: var(--accent);
+color: #ffffff;
+border-color: var(--accent);
+}
+
+.btn-primary:hover {
+background: #1d4ed8;
+border-color: #1d4ed8;
+}
+
+.btn-outline {
+background: #ffffff;
+color: var(--accent);
+border-color: var(--accent);
+}
+
+.btn-outline:hover {
+background: var(--accent-soft);
+}
+
+.btn-secondary {
+background: #e5e7eb;
+color: #111827;
+border-color: #d1d5db;
+}
+
+.btn-secondary:hover {
+background: #d4d4d8;
+}
+
+.preview-wrapper {
+max-height: 520px;
+overflow: auto;
+padding: 6px;
+background: #f9fafb;
+border-radius: 8px;
+border: 1px dashed #d1d5db;
+}
+
+.preview-hint {
+font-size: 11px;
+color: var(--text-muted);
+margin-bottom: 6px;
+}
+
+.label {
+width: 52mm;
+min-height: 33mm;
+border: 1px solid #000;
+padding: 2mm;
+font-size: 10px;
+line-height: 1.2;
+margin-top: 5px;
+background: #fff;
+}
+
+.label-header {
+font-weight: bold;
+margin-bottom: 3px;
+}
+
+.label-header-name {
+text-transform: none;
+}
+
+.label-header-id {
+font-size: 10px;
+}
+
+.label-datetime-row {
+display: flex;
+justify-content: space-between;
+font-weight: bold;
+margin: 4px 0;
+border-top: 1px solid #000;
+border-bottom: 1px solid #000;
+padding: 2px 0;
+}
+
+.label-weekday {
+width: 25%;
+}
+
+.label-date {
+text-align: center;
+width: 40%;
+}
+
+.label-time {
+text-align: right;
+width: 35%;
+}
+
+.label-meds-row {
+display: flex;
+gap: 4px;
+}
+
+.label-meds-qty {
+width: 12px;
+text-align: right;
+}
+
+.label-meds-text {
+flex: 1;
+}
+
+.label-footer {
+display: flex;
+justify-content: space-between;
+font-size: 9px;
+margin-top: 6px;
+border-top: 1px solid #000;
+padding-top: 2px;
+}
+
+@media print {
+  /* Ren vit bakgrund vid utskrift */
+  body {
+    margin: 0;
+    background: #fff;
+  }
+
+  /* Dölj allt som inte är förhandsvisningen */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Visa bara själva förhandsvisningsrutan och etiketter i den */
+  .preview-wrapper,
+  .preview-wrapper * {
+    visibility: visible;
+  }
+
+  /* Viktigt: låt alla etiketter få full höjd, ingen scroll */
+  .preview-wrapper {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0;
+    border: none;
+    background: #fff;
+  }
+
+  /* Säkerställ normal layout för etiketterna */
+  #labelsContainer {
+    position: static;
+    display: block;
+  }
+
+  /* En etikett ska inte delas över sidbrytning */
+  .label {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    /* valfritt, men ofta bra: */
+    width: 52mm;
+    min-height: 33mm;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<header class="app-header">
+<h1 class="app-title">Apodos – skapa påsar</h1>
+<p class="app-subtitle">Fyll i patientens läkemedel så skapar systemet rätt antal påsar med etiketter anpassade för Zebra 52×33&nbsp;mm.</p>
+</header>
+
+<main class="layout">
+<section class="card">
+<div class="card-header">
+<h2 class="card-title">Patientuppgifter</h2>
+<span class="card-caption">Steg 1–3: fyll i uppgifter, läkemedel och tider</span>
+</div>
+
+<form id="form" onsubmit="event.preventDefault();">
+<div class="field-group">
+<label class="field-label" for="name">Namn</label>
+<input type="text" id="name" placeholder="För- och efternamn">
+</div>
+
+<div class="field-group">
+<label class="field-label" for="pnr">Personnummer / födelsedatum</label>
+<input type="text" id="pnr" placeholder="ÅÅÅÅMMDD-XXXX eller liknande">
+</div>
+
+<div class="field-group">
+<label class="field-label" for="unit">Avdelning / enhet</label>
+<input type="text" id="unit" placeholder="t.ex. Avd 357">
+<div class="field-helper">Visas längst ned på etiketten tillsammans med skapandedatum.</div>
+</div>
+
+<div class="field-group">
+<div class="section-title">Läkemedel och antal</div>
+<div class="section-caption">En rad per läkemedel. Antal tabletter per vald tid. Använd +/– till vänster för att lägga till eller ta bort rader.</div>
+
+<table id="medTable">
+<thead>
+<tr id="headerRow">
+<th></th>
+<th class="med-col">Läkemedelsnamn och styrka</th>
+<!-- tid-kolumner fylls i med JS -->
+</tr>
+</thead>
+<tbody>
+<!-- rader fylls i med JS -->
+</tbody>
+</table>
+</div>
+
+<div class="field-group">
+<div class="section-title">Start- och stoppdatum</div>
+<div class="section-caption">Systemet skapar en påse per datum och tid där dos &gt; 0.</div>
+
+<div class="inline-row" style="margin-bottom:6px;">
+<div>
+<label class="field-label" for="startDate">Startdatum</label>
+<input type="date" id="startDate">
+</div>
+<div>
+<label class="field-label" for="startTime">Starttid</label>
+<select id="startTime"></select>
+</div>
+</div>
+
+<div class="inline-row">
+<div>
+<label class="field-label" for="endDate">Slutdatum</label>
+<input type="date" id="endDate">
+</div>
+<div>
+<label class="field-label" for="endTime">Sluttid</label>
+<select id="endTime"></select>
+</div>
+</div>
+</div>
+
+<div class="button-row">
+<button type="button" id="generateBtn" class="btn btn-primary">Generera etiketter</button>
+<button type="button" id="printBtn" class="btn btn-outline">Skriv ut alla påsar</button>
+</div>
+</form>
+</section>
+
+<section class="card">
+<div class="card-header">
+<h2 class="card-title">Förhandsvisning</h2>
+<span class="card-caption">Etiketterna visas här innan utskrift</span>
+</div>
+<p class="preview-hint">Klicka på <strong>Generera etiketter</strong> för att uppdatera förhandsvisningen. Vid utskrift skrivs endast etiketterna ut.</p>
+<div class="preview-wrapper" id="labelsContainer"></div>
+</section>
+</main>
+</div>
+
+<script>
+let times = ['08']; // start med en morgontid
+
+function escapeHtml(unsafe) {
+return unsafe
+.replace(/&/g, '&amp;')
+.replace(/</g, '&lt;')
+.replace(/"/g, '&quot;')
+.replace(/'/g, '&#039;');
+}
+
+// Läs alla rader (även tomma, behövs för radhantering)
+function readCurrentData() {
+const tbody = document.querySelector('#medTable tbody');
+const rows = Array.from(tbody.querySelectorAll('tr'));
+return rows.map(row => {
+const nameInput = row.querySelector('.med-name');
+const medName = nameInput ? nameInput.value.trim() : '';
+const doses = {};
+times.forEach(t => {
+const input = row.querySelector(`.dose-input[data-time="${t}"]`);
+const val = input && input.value !== '' ? parseInt(input.value, 10) : 0;
+doses[t] = isNaN(val) ? 0 : val;
+});
+return { medName, doses };
+});
+}
+
+// Bara de rader som faktiskt används till etiketter
+function getNonEmptyMedData() {
+return readCurrentData().filter(r => r.medName !== '' || Object.values(r.doses).some(v => v > 0));
+}
+
+function renderTable(data) {
+const table = document.getElementById('medTable');
+const theadRow = document.getElementById('headerRow');
+const tbody = table.querySelector('tbody');
+
+// Header: första kolumnen tom (radens +/–), sedan läkemedel, sedan tider + tid-knappar
+theadRow.innerHTML = '<th></th><th class="med-col">Läkemedelsnamn och styrka</th>';
+times.forEach((t, idx) => {
+theadRow.innerHTML += `<th><input type="text" class="time-header-input" data-index="${idx}" value="${escapeHtml(t)}" /></th>`;
+});
+theadRow.innerHTML += '<th class="time-control-cell"><button type="button" class="time-plus">+</button> <button type="button" class="time-minus">-</button></th>';
+
+// Body
+tbody.innerHTML = '';
+if (!data || data.length === 0) {
+data = [{ medName: '', doses: Object.fromEntries(times.map(t => [t, 0])) }];
+}
+
+data.forEach((rowData, rowIndex) => {
+const tr = document.createElement('tr');
+const isLast = (rowIndex === data.length - 1);
+
+let html = '<td class="row-actions-cell">';
+// minus-knapp alltid
+html += `<button type="button" class="row-btn row-minus" data-row="${rowIndex}">-</button>`;
+// plus-knapp bara på sista raden
+if (isLast) {
+html += `<button type="button" class="row-btn row-plus" data-row="${rowIndex}">+</button>`;
+}
+html += '</td>';
+
+html += `<td class="med-col"><input type="text" class="med-name" style="width: 100%;" value="${escapeHtml(rowData.medName)}"></td>`;
+times.forEach(t => {
+const val = rowData.doses[t] || 0;
+html += `<td><input type="number" min="0" step="1" class="dose-input" data-time="${escapeHtml(t)}" value="${val > 0 ? val : ''}"></td>`;
+});
+
+tr.innerHTML = html;
+tbody.appendChild(tr);
+});
+}
+
+function renderTimeSelectors() {
+const startSel = document.getElementById('startTime');
+const endSel = document.getElementById('endTime');
+if (!startSel || !endSel) return;
+
+const prevStart = startSel.value;
+const prevEnd = endSel.value;
+
+startSel.innerHTML = '';
+endSel.innerHTML = '';
+
+const validTimes = times.filter(t => t && t.trim() !== '');
+
+validTimes.forEach(t => {
+const hour = t.includes(':') ? t.split(':')[0] : t;
+const label = hour.toString().padStart(2, '0');
+
+const optStart = document.createElement('option');
+optStart.value = t;
+optStart.textContent = label;
+startSel.appendChild(optStart);
+
+const optEnd = document.createElement('option');
+optEnd.value = t;
+optEnd.textContent = label;
+endSel.appendChild(optEnd);
+});
+
+if (prevStart && Array.from(startSel.options).some(o => o.value === prevStart)) {
+startSel.value = prevStart;
+}
+if (prevEnd && Array.from(endSel.options).some(o => o.value === prevEnd)) {
+endSel.value = prevEnd;
+}
+
+if (!startSel.value && startSel.options.length > 0) {
+startSel.selectedIndex = 0;
+}
+if (!endSel.value && endSel.options.length > 0) {
+endSel.selectedIndex = endSel.options.length - 1;
+}
+}
+
+function addMedRow(afterIndex = null) {
+const data = readCurrentData();
+const blankDoses = Object.fromEntries(times.map(t => [t, 0]));
+const insertIndex = (afterIndex === null) ? data.length : afterIndex + 1;
+data.splice(insertIndex, 0, { medName: '', doses: blankDoses });
+renderTable(data);
+}
+
+function addTime() {
+// Lägg till en tom tidkolumn som du själv fyller i i headern
+times.push('');
+const data = readCurrentData();
+renderTable(data);
+renderTimeSelectors();
+}
+
+function removeLastTime() {
+if (times.length <= 1) {
+alert('Minst en tid måste finnas kvar.');
+return;
+}
+times.pop();
+const data = readCurrentData();
+renderTable(data);
+renderTimeSelectors();
+}
+
+function buildDateTime(dateStr, timeStr) {
+if (!dateStr) return null;
+const d = new Date(dateStr);
+let h = 0, m = 0;
+if (timeStr && timeStr.trim() !== '') {
+const parts = timeStr.split(':');
+h = parseInt(parts[0], 10) || 0;
+m = parts.length > 1 ? (parseInt(parts[1], 10) || 0) : 0;
+}
+d.setHours(h, m, 0, 0);
+return d;
+}
+
+// Bygg datum+tid utifrån ett befintligt Date-objekt (utan toISOString/tidszonsproblem)
+function buildDateTimeFromDate(dateObj, timeStr) {
+if (!dateObj) return null;
+const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+let h = 0, m = 0;
+if (timeStr && timeStr.trim() !== '') {
+const parts = timeStr.split(':');
+h = parseInt(parts[0], 10) || 0;
+m = parts.length > 1 ? (parseInt(parts[1], 10) || 0) : 0;
+}
+d.setHours(h, m, 0, 0);
+return d;
+}
+function formatWeekday(dateObj) {
+const days = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag'];
+return days[dateObj.getDay()];
+}
+
+function formatDayMonth(dateObj) {
+const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEC'];
+const day = String(dateObj.getDate()).padStart(2, '0');
+const month = months[dateObj.getMonth()];
+return `${day} ${month}`;
+}
+
+function formatTimeLabel(time) {
+if (time.includes(':')) {
+const [h, m] = time.split(':');
+return `${h.padStart(2, '0')}:${(m || '00').padStart(2, '0')}`;
+}
+return `${time.toString().padStart(2, '0')}:00`;
+}
+
+function generate() {
+const container = document.getElementById('labelsContainer');
+container.innerHTML = '';
+
+const name = document.getElementById('name').value.trim();
+const pnr = document.getElementById('pnr').value.trim();
+const unit = document.getElementById('unit').value.trim();
+const startDate = document.getElementById('startDate').value;
+const endDate = document.getElementById('endDate').value;
+
+const startTimeSel = document.getElementById('startTime');
+const endTimeSel = document.getElementById('endTime');
+const startTimeStr = startTimeSel ? startTimeSel.value : '';
+const endTimeStr = endTimeSel ? endTimeSel.value : '';
+
+if (!name || !pnr) {
+alert('Fyll i namn och personnummer/födelsedatum.');
+return;
+}
+if (!startDate || !endDate) {
+alert('Ange start- och slutdatum.');
+return;
+}
+if (!startTimeStr || !endTimeStr) {
+alert('Välj start- och sluttid.');
+return;
+}
+
+const startDT = buildDateTime(startDate, startTimeStr);
+const endDT = buildDateTime(endDate, endTimeStr);
+
+if (endDT < startDT) {
+alert('Slutdatum/tid måste vara samma eller efter startdatum/tid.');
+return;
+}
+
+const medData = getNonEmptyMedData();
+if (medData.length === 0) {
+alert('Ange minst ett läkemedel eller dos.');
+return;
+}
+
+const dates = [];
+const cursor = new Date(startDT);
+cursor.setHours(0, 0, 0, 0);
+const lastDay = new Date(endDT);
+lastDay.setHours(0, 0, 0, 0);
+
+for (let d = new Date(cursor); d <= lastDay; d.setDate(d.getDate() + 1)) {
+dates.push(new Date(d));
+}
+
+let labelCount = 0;
+const createdDate = new Date();
+const createdStr = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+
+dates.forEach(dateObj => {
+const weekdayStr = formatWeekday(dateObj);
+const dayMonthStr = formatDayMonth(dateObj);
+
+times.forEach(time => {
+if (!time || !time.trim()) return;
+
+// Bygg datum+tid direkt från dateObj så vi slipper tidszons-förskjutning
+const dt = buildDateTimeFromDate(dateObj, time);
+if (dt < startDT || dt > endDT) return;
+
+const medsForTime = medData
+.map(r => ({ name: r.medName, dose: r.doses[time] || 0 }))
+.filter(r => r.dose > 0 && r.name !== '');
+
+if (medsForTime.length === 0) return;
+
+const labelDiv = document.createElement('div');
+labelDiv.className = 'label';
+let medsHtml = '';
+medsForTime.forEach(r => {
+medsHtml += `<div class="label-meds-row"><span class="label-meds-qty">${escapeHtml(String(r.dose))}</span><span class="label-meds-text">${escapeHtml(r.name)}</span></div>`;
+});
+
+const timeLabel = formatTimeLabel(time);
+
+labelDiv.innerHTML = `
+<div class="label-header">
+<div class="label-header-name">${escapeHtml(name)}</div>
+<div class="label-header-id">${escapeHtml(pnr)}</div>
+</div>
+<div class="label-datetime-row">
+<span class="label-weekday">${escapeHtml(weekdayStr)}</span>
+<span class="label-date">${escapeHtml(dayMonthStr)}</span>
+<span class="label-time">KL ${escapeHtml(timeLabel)}</span>
+</div>
+<div class="label-meds">
+${medsHtml}
+</div>
+<div class="label-footer">
+<span>${escapeHtml(createdStr)}</span>
+<span>${escapeHtml(unit || '')}</span>
+</div>
+`;
+container.appendChild(labelDiv);
+labelCount++;
+});
+});
+
+alert('Totalt antal påsar: ' + labelCount);
+}
+
+// --- Eventkoppling ---
+
+const medTbody = document.querySelector('#medTable tbody');
+const medThead = document.querySelector('#medTable thead');
+
+document.getElementById('generateBtn').addEventListener('click', generate);
+document.getElementById('printBtn').addEventListener('click', function () {
+generate();
+window.print();
+});
+
+// rader: + / -
+medTbody.addEventListener('click', function (e) {
+if (e.target.classList.contains('row-plus') || e.target.classList.contains('row-minus')) {
+const index = parseInt(e.target.dataset.row, 10);
+const data = readCurrentData();
+if (e.target.classList.contains('row-plus')) {
+addMedRow(index);
+} else {
+if (data.length <= 1) {
+data[0].medName = '';
+Object.keys(data[0].doses).forEach(t => data[0].doses[t] = 0);
+renderTable(data);
+} else {
+data.splice(index, 1);
+renderTable(data);
+}
+}
+}
+});
+
+// ändra tider direkt i headern
+medThead.addEventListener('input', function (e) {
+if (!e.target.classList.contains('time-header-input')) return;
+const idx = parseInt(e.target.dataset.index, 10);
+if (isNaN(idx)) return;
+let val = e.target.value.trim();
+if (!val) return;
+
+// Ingen automatisk nollutfyllnad under inmatning – låt fältet vara tomt och endast uppdatera tiden direkt
+times[idx] = val;
+
+const rows = Array.from(medTbody.querySelectorAll('tr'));
+rows.forEach(row => {
+const inputs = row.querySelectorAll('.dose-input');
+if (inputs[idx]) {
+inputs[idx].setAttribute('data-time', val);
+}
+});
+
+renderTimeSelectors();
+});
+
+// tidernas + / -
+medThead.addEventListener('click', function (e) {
+if (e.target.classList.contains('time-plus')) {
+addTime();
+} else if (e.target.classList.contains('time-minus')) {
+removeLastTime();
+}
+});
+
+// init
+renderTable([]);
+renderTimeSelectors();
+</script>
+
+</body>
+</html>
