@@ -267,7 +267,7 @@
   }
 
   .btn-outline:hover {
-    background: #e0ecff;
+    background: var(--accent-soft);
   }
 
   .btn-secondary {
@@ -366,9 +366,9 @@
     padding-top: 2px;
   }
 
-  /* NY UTSKRIFTSDEL – ersätter din gamla @media print */
+  /* NY UTSKRIFTSDEL – ersätter den gamla */
   @media print {
-    /* Sätt sidstorlek till etikettens storlek */
+    /* Sidstorlek motsvarande en etikett (för skrivare/PDF) */
     @page {
       size: 52mm 33mm;
       margin: 0;
@@ -379,7 +379,7 @@
       background: #fff;
     }
 
-    /* Dölj allt annat */
+    /* Dölj allt som inte är etiketterna */
     body * {
       visibility: hidden;
     }
@@ -390,7 +390,7 @@
       visibility: visible;
     }
 
-    /* Ta bort scroll-begränsning vid utskrift */
+    /* Ta bort scroll-begränsningen vid utskrift */
     .preview-wrapper {
       max-height: none !important;
       overflow: visible !important;
@@ -535,7 +535,7 @@ function readCurrentData() {
     const medName = nameInput ? nameInput.value.trim() : '';
     const doses = {};
     times.forEach(t => {
-      const input = row.querySelector('.dose-input[data-time="' + t + '"]');
+      const input = row.querySelector(`.dose-input[data-time="${t}"]`);
       const val = input && input.value !== '' ? parseInt(input.value, 10) : 0;
       doses[t] = isNaN(val) ? 0 : val;
     });
@@ -556,7 +556,7 @@ function renderTable(data) {
   // Header: första kolumnen tom (radens +/–), sedan läkemedel, sedan tider + tid-knappar
   theadRow.innerHTML = '<th></th><th class="med-col">Läkemedelsnamn och styrka</th>';
   times.forEach((t, idx) => {
-    theadRow.innerHTML += '<th><input type="text" class="time-header-input" data-index="' + idx + '" value="' + escapeHtml(t) + '" /></th>';
+    theadRow.innerHTML += `<th><input type="text" class="time-header-input" data-index="${idx}" value="${escapeHtml(t)}" /></th>`;
   });
   theadRow.innerHTML += '<th class="time-control-cell"><button type="button" class="time-plus">+</button> <button type="button" class="time-minus">-</button></th>';
 
@@ -572,17 +572,17 @@ function renderTable(data) {
 
     let html = '<td class="row-actions-cell">';
     // minus-knapp alltid
-    html += '<button type="button" class="row-btn row-minus" data-row="' + rowIndex + '">-</button>';
+    html += `<button type="button" class="row-btn row-minus" data-row="${rowIndex}">-</button>`;
     // plus-knapp bara på sista raden
     if (isLast) {
-      html += '<button type="button" class="row-btn row-plus" data-row="' + rowIndex + '">+</button>';
+      html += `<button type="button" class="row-btn row-plus" data-row="${rowIndex}">+</button>`;
     }
     html += '</td>';
 
-    html += '<td class="med-col"><input type="text" class="med-name" style="width: 100%;" value="' + escapeHtml(rowData.medName) + '"></td>';
+    html += `<td class="med-col"><input type="text" class="med-name" style="width: 100%;" value="${escapeHtml(rowData.medName)}"></td>`;
     times.forEach(t => {
       const val = rowData.doses[t] || 0;
-      html += '<td><input type="number" min="0" step="1" class="dose-input" data-time="' + escapeHtml(t) + '" value="' + (val > 0 ? val : '') + '"></td>';
+      html += `<td><input type="number" min="0" step="1" class="dose-input" data-time="${escapeHtml(t)}" value="${val > 0 ? val : ''}"></td>`;
     });
 
     tr.innerHTML = html;
@@ -698,17 +698,15 @@ function formatDayMonth(dateObj) {
   const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEC'];
   const day = String(dateObj.getDate()).padStart(2, '0');
   const month = months[dateObj.getMonth()];
-  return day + ' ' + month;
+  return `${day} ${month}`;
 }
 
 function formatTimeLabel(time) {
   if (time.includes(':')) {
-    const parts = time.split(':');
-    const h = parts[0];
-    const m = parts[1] || '00';
-    return h.padStart(2, '0') + ':' + m.padStart(2, '0');
+    const [h, m] = time.split(':');
+    return `${h.padStart(2, '0')}:${(m || '00').padStart(2, '0')}`;
   }
-  return time.toString().padStart(2, '0') + ':00';
+  return `${time.toString().padStart(2, '0')}:00`;
 }
 
 function escapeZpl(str) {
@@ -767,12 +765,9 @@ function generateZPL() {
   }
 
   const createdDate = new Date();
-  const createdStr =
-    createdDate.getFullYear() +
-    '-' +
-    String(createdDate.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(createdDate.getDate()).padStart(2, '0');
+  const createdStr = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}-${String(
+    createdDate.getDate()
+  ).padStart(2, '0')}`;
 
   let zpl = '';
   let labelCount = 0;
@@ -802,4 +797,38 @@ function generateZPL() {
       zpl += '^LL264\n';
       // Försök med Unicode/UTF-8 (beroende på skrivarkonfig):
       zpl += '^CI28\n';
-</html>
+
+      // Namn
+      zpl += '^FO20,20^A0N,30,24^FD' + escapeZpl(name) + '^FS\n';
+      // Personnummer
+      zpl += '^FO20,60^A0N,24,20^FD' + escapeZpl(pnr) + '^FS\n';
+
+      // Avskiljare över datumraden
+      zpl += '^FO20,90^GB376,2,2^FS\n';
+
+      // Datumrad: veckodag vänster, datum centrerat, tid höger ("KL 08:00")
+      zpl += '^FO20,100^A0N,22,18^FD' + escapeZpl(weekdayStr) + '^FS\n';
+      zpl += '^FO160,100^A0N,22,18^FD' + escapeZpl(dayMonthStr) + '^FS\n';
+      zpl += '^FO300,100^A0N,22,18^FDKL ' + escapeZpl(timeLabel) + '^FS\n';
+
+      // Avskiljare under datumraden
+      zpl += '^FO20,120^GB376,2,2^FS\n';
+
+      // Läkemedel, rad för rad
+      let y = 130;
+      medsForTime.forEach(r => {
+        const medLine = `${r.dose} ${r.name}`;
+        zpl += '^FO20,' + y + '^A0N,22,18^FD' + escapeZpl(medLine) + '^FS\n';
+        y += 24;
+      });
+
+      // Avskiljare över footer
+      zpl += '^FO20,' + (y + 2) + '^GB376,2,2^FS\n';
+
+      // Footer: skapandedatum + enhet
+      zpl += '^FO20,' + (y + 6) + '^A0N,18,16^FD' + escapeZpl(createdStr) + '^FS\n';
+      if (unit) {
+        zpl += '^FO200,' + (y + 6) + '^A0N,18,16^FD' + escapeZpl(unit) + '^FS\n';
+      }
+
+      // Slut på etikett
